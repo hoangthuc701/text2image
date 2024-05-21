@@ -306,9 +306,9 @@ class TextDataset(data.Dataset):
             bbox = None
             #data_dir = self.data_dir
             if self.split_name == 'train':
-                data_dir = '/data/scene_understanding/coco2014/train2014'
+                data_dir = '/content/text2image/data/coco/images/train'
             else:
-                data_dir = '/data/scene_understanding/coco2014/val2014'
+                data_dir = '/content/text2image/data/coco/images/val'
         #
         img_name = '%s/%s.jpg' % (data_dir, key)
         imgs = get_imgs(img_name, self.imsize,
