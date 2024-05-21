@@ -113,7 +113,9 @@ def _merge_a_into_b(a, b):
 def cfg_from_file(filename):
     """Load a config file and merge it into the default options."""
     import yaml
+    from yaml import FullLoader
+    
     with open(filename, 'r') as f:
-        yaml_cfg = edict(yaml.load(f))
+        yaml_cfg = edict(yaml.load(f, Loader=FullLoader))
 
     _merge_a_into_b(yaml_cfg, __C)
