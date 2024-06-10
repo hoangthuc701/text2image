@@ -34,6 +34,8 @@ import numpy as np
 from PIL import Image
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+from torchvision.utils import save_image
+
 
 from miscc.utils import mkdir_p
 from miscc.utils import imagenet_deprocess_batch
@@ -121,7 +123,14 @@ def sampling(text_encoder, netG, dataloader, ixtoword, device):
             words_embs, sent_emb = words_embs.detach(), sent_emb.detach()
 
             # code for generating captions
-            #cap_imgs = cap2img_new(ixtoword, captions, cap_lens, s_tmp_dir)
+            #fullpath = '%s_%3d.png' % (s_tmp,i)
+            # s_tmp = '%s/fm' % cap_save_dir
+            # fullpath = '%s_s%d.png' % (s_tmp, idx)
+            # cap_imgs = cap2img(ixtoword, captions, cap_lens)
+            # save_image(cap_imgs, fullpath)
+
+            
+            
 
             #######################################################
             # (2) Generate fake images
@@ -146,21 +155,32 @@ def sampling(text_encoder, netG, dataloader, ixtoword, device):
                 im = Image.fromarray(im)
 
                 #fullpath = '%s_%3d.png' % (s_tmp,i)
-                fullpath = '%s_s%d.png' % (s_tmp, idx)
-                im.save(fullpath)
-
-                # save the last fusion mask
-                s_tmp = '%s/fm' % fake_img_save_dir
-                im = stage_mask[j].data.cpu().numpy()
-                # [0, 1] --> [0, 255]
-                # im = 1-im # only for better visualization
-                im = im * 255.0
-                im = im.astype(np.uint8)
-                im = np.transpose(im, (1, 2, 0))
-                im = np.squeeze(im, axis=2)
-                im = Image.fromarray(im)
                 fullpath = '%s_%d.png' % (s_tmp, idx)
                 im.save(fullpath)
+
+                # save real image
+                im = real_imgs[j].data.cpu().numpy()
+                # [-1, 1] --> [0, 255]
+                im = (im + 1.0) * 127.5
+                im = im.astype(np.uint8)
+                im = np.transpose(im, (1, 2, 0))
+                im = Image.fromarray(im)
+                s_tmp = '%s/img' % real_img_save_dir
+                fullpath = '%s_%d.png' % (s_tmp, idx)
+                im.save(fullpath) 
+
+                # save the last fusion mask
+                # s_tmp = '%s/fm' % fake_img_save_dir
+                # im = stage_mask[j].data.cpu().numpy()
+                # # [0, 1] --> [0, 255]
+                # # im = 1-im # only for better visualization
+                # im = im * 255.0
+                # im = im.astype(np.uint8)
+                # im = np.transpose(im, (1, 2, 0))
+                # im = np.squeeze(im, axis=2)
+                # im = Image.fromarray(im)
+                # fullpath = '%s_%d.png' % (s_tmp, idx)
+                # im.save(fullpath)
 
                 idx += 1
 
