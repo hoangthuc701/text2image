@@ -31,7 +31,7 @@ def main(args):
             orig_image = orig_image.cuda()
             orig_image = orig_image.unsqueeze(0)
             for j in range(args.generated_image_number):
-                generated_image = im_transform(Image.open(os.path.join(args.generated_image_path, orig_images[i][:-4] + '_numb_' + str(j) + '.jpg')).convert('RGB'))
+                generated_image = im_transform(Image.open(os.path.join(args.generated_image_path, orig_images[i][:-4]+'.png')).convert('RGB'))
                 generated_image = generated_image.cuda()
                 generated_image = generated_image.unsqueeze(0)
                 score = net(orig_image, generated_image).squeeze()
